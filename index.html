@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-PT" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jean Mattos | Analista de Dados & BI</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#D4A000', /* Amarelo para Tema Claro */
+                            dark: '#F2C811',    /* Amarelo Power BI para Tema Escuro */
+                        },
+                        dark: {
+                            bg: '#0F111A',
+                            alt: '#161925',
+                            surface: '#1E2130',
+                            hover: '#2A2D3E',
+                            border: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        light: {
+                            bg: '#F8F9FA',
+                            alt: '#FFFFFF',
+                            surface: '#FFFFFF',
+                            hover: '#F1F3F5',
+                            border: 'rgba(0, 0, 0, 0.08)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Padrão de Fundo (Grid) que é mais fácil gerir com CSS puro */
+        .bg-grid-pattern {
+            background-image: radial-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .dark .bg-grid-pattern {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+        }
+
+        /* Classes de Animação Base */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-light-bg text-gray-900 dark:bg-dark-bg dark:text-white transition-colors duration-300 overflow-x-hidden antialiased">
+
+    <nav class="fixed w-full top-0 z-50 backdrop-blur-md bg-white/90 dark:bg-[#0F111A]/95 border-b border-light-border dark:border-dark-border transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0 font-bold text-xl md:text-2xl tracking-widest uppercase">
+                    JEAN <span class="text-brand dark:text-brand-dark">MATTOS</span>
+                </div>
+                
+                <div class="flex items-center gap-6 lg:gap-10">
+                    <div class="hidden lg:flex items-center gap-8">
+                        <a href="#sobre" class="text-sm font-semibold uppercase tracking-wider hover:text-brand dark:hover:text-brand-dark transition-colors">Sobre</a>
+                        <a href="#experiencia" class="text-sm font-semibold uppercase tracking-wider hover:text-brand dark:hover:text-brand-dark transition-colors">Experiência</a>
+                        <a href="#projetos" class="text-sm font-semibold uppercase tracking-wider hover:text-brand dark:hover:text-brand-dark transition-colors">Projetos</a>
+                        <a href="#competencias" class="text-sm font-semibold uppercase tracking-wider hover:text-brand dark:hover:text-brand-dark transition-colors">Competências</a>
+                        <a href="#formacao" class="text-sm font-semibold uppercase tracking-wider hover:text-brand dark:hover:text-brand-dark transition-colors">Formação</a>
+                        <a href="#contato" class="text-sm font-semibold uppercase tracking-wider hover:text-brand dark:hover:text-brand-dark transition-colors">Contato</a>
+                    </div>
+                    
+                    <div class="flex items-center gap-4">
+                        <button id="themeToggle" class="w-10 h-10 rounded-full flex items-center justify-center border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:border-brand dark:hover:border-brand-dark hover:text-brand dark:hover:text-brand-dark hover:scale-110 transition-all" aria-label="Alternar tema">
+                            <span id="themeIcon" class="text-lg">☀️</span>
+                        </button>
+                        
+                        <button id="mobileMenuBtn" class="lg:hidden text-3xl focus:outline-none hover:text-brand dark:hover:text-brand-dark transition-colors">
+                            ☰
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="lg:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-white/95 dark:bg-[#0F111A]/95 backdrop-blur-md border-b border-transparent">
+            <div class="flex flex-col items-center py-4 space-y-6">
+                <a href="#sobre" class="mobile-link text-base font-semibold uppercase tracking-wider w-full text-center py-2 hover:bg-light-hover dark:hover:bg-dark-hover">Sobre</a>
+                <a href="#experiencia" class="mobile-link text-base font-semibold uppercase tracking-wider w-full text-center py-2 hover:bg-light-hover dark:hover:bg-dark-hover">Experiência</a>
+                <a href="#projetos" class="mobile-link text-base font-semibold uppercase tracking-wider w-full text-center py-2 hover:bg-light-hover dark:hover:bg-dark-hover">Projetos</a>
+                <a href="#competencias" class="mobile-link text-base font-semibold uppercase tracking-wider w-full text-center py-2 hover:bg-light-hover dark:hover:bg-dark-hover">Competências</a>
+                <a href="#formacao" class="mobile-link text-base font-semibold uppercase tracking-wider w-full text-center py-2 hover:bg-light-hover dark:hover:bg-dark-hover">Formação</a>
+                <a href="#contato" class="mobile-link text-base font-semibold uppercase tracking-wider w-full text-center py-2 hover:bg-light-hover dark:hover:bg-dark-hover">Contato</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="hero" class="relative min-h-screen flex items-center pt-20">
+        <div class="absolute inset-0 bg-grid-pattern opacity-50 z-0"></div>
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 w-full fade-in-section">
+            <div class="max-w-3xl">
+                <p class="text-brand dark:text-brand-dark font-bold tracking-[0.2em] text-sm md:text-base uppercase mb-4">
+                    Analista de Dados & Especialista BI
+                </p>
+                <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight tracking-tight">
+                    Jean Mattos
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-10 max-w-2xl leading-relaxed">
+                    Transformando dados complexos em inteligência de negócio, processos automatizados e indicadores estratégicos para a tomada de decisão.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#projetos" class="inline-flex justify-center items-center px-8 py-4 rounded-md font-bold text-white bg-brand dark:bg-brand-dark hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(242,200,17,0.3)] transition-all">
+                        Ver Projetos Estratégicos
+                    </a>
+                    <a href="#contato" class="inline-flex justify-center items-center px-8 py-4 rounded-md font-bold border-2 border-gray-300 dark:border-dark-border hover:border-brand dark:hover:border-brand-dark hover:text-brand dark:hover:text-brand-dark transition-all">
+                        Entre em Contato
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="sobre" class="py-24 scroll-mt-20 bg-light-alt dark:bg-dark-alt border-y border-light-border dark:border-dark-border fade-in-section">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold mb-2">Inteligência Orientada a Resultados</h2>
+            <div class="w-16 h-1 bg-brand dark:bg-brand-dark rounded mt-4 mb-10"></div>
+            
+            <p class="text-lg text-gray-600 dark:text-gray-400 max-w-4xl leading-relaxed mb-16">
+                Atuo há mais de 2 anos com o ciclo completo de inteligência corporativa — da estruturação e engenharia de dados (ETL) à entrega de painéis executivos. Especialista na criação de fluxos de dados escaláveis que reduzem custos operacionais e aumentam a visibilidade estratégica do negócio, conectando tecnologia às necessidades de Controladorias, Diretorias e áreas de Produção.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-light-surface dark:bg-dark-surface p-8 rounded-xl border border-light-border dark:border-dark-border border-b-4 border-b-brand dark:border-b-brand-dark shadow-sm hover:-translate-y-2 hover:shadow-lg transition-all text-center group">
+                    <div class="kpi-number text-5xl font-extrabold text-brand dark:text-brand-dark mb-2" data-target="32">0</div>
+                    <div class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest group-hover:text-gray-900 dark:group-hover:text-white transition-colors">Dashboards Ativos</div>
+                </div>
+                <div class="bg-light-surface dark:bg-dark-surface p-8 rounded-xl border border-light-border dark:border-dark-border border-b-4 border-b-brand dark:border-b-brand-dark shadow-sm hover:-translate-y-2 hover:shadow-lg transition-all text-center group">
+                    <div class="kpi-number text-5xl font-extrabold text-brand dark:text-brand-dark mb-2" data-target="100">0</div>
+                    <div class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest group-hover:text-gray-900 dark:group-hover:text-white transition-colors">Utilizadores</div>
+                </div>
+                <div class="bg-light-surface dark:bg-dark-surface p-8 rounded-xl border border-light-border dark:border-dark-border border-b-4 border-b-brand dark:border-b-brand-dark shadow-sm hover:-translate-y-2 hover:shadow-lg transition-all text-center group">
+                    <div class="kpi-number text-5xl font-extrabold text-brand dark:text-brand-dark mb-2" data-target="85">0</div>
+                    <div class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest group-hover:text-gray-900 dark:group-hover:text-white transition-colors">% Redução Tempo ETL</div>
+                </div>
+                <div class="bg-light-surface dark:bg-dark-surface p-8 rounded-xl border border-light-border dark:border-dark-border border-b-4 border-b-brand dark:border-b-brand-dark shadow-sm hover:-translate-y-2 hover:shadow-lg transition-all text-center group">
+                    <div class="kpi-number text-5xl font-extrabold text-brand dark:text-brand-dark mb-2" data-target="6">0</div>
+                    <div class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest group-hover:text-gray-900 dark:group-hover:text-white transition-colors">% Ganho Rendimento</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experiencia" class="py-24 scroll-mt-20 fade-in-section">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold mb-2">Trajetória Profissional</h2>
+            <div class="w-16 h-1 bg-brand dark:bg-brand-dark rounded mt-4 mb-16"></div>
+
+            <div class="border-l-2 border-gray-300 dark:border-dark-border pl-8 md:pl-10 relative ml-2 md:ml-4">
+                
+                <div class="mb-16 relative group">
+                    <div class="absolute w-4 h-4 bg-brand dark:bg-brand-dark rounded-full -left-[41px] md:-left-[49px] top-1 shadow-[0_0_10px_rgba(242,200,17,0.8)]"></div>
+                    <span class="text-brand dark:text-brand-dark font-bold text-sm md:text-base mb-2 block">Out/2024 - Atual</span>
+                    <h3 class="text-2xl font-bold mb-1 group-hover:text-brand dark:group-hover:text-brand-dark transition-colors">Analista de Dados (BI)</h3>
+                    <h4 class="text-lg font-semibold text-gray-600 dark:text-gray-400 mb-4">Grupo Minuano (Curtume & Estofados)</h4>
+                    <ul class="list-disc list-outside ml-5 text-gray-600 dark:text-gray-400 space-y-2 leading-relaxed">
+                        <li>Arquitetura e sustentação do ecossistema de BI do grupo, integrando múltiplas fontes (Oracle, SQL Server, SharePoint, APIs).</li>
+                        <li>Redução drástica do tempo de atualização de relatórios de 4h para menos de 30 minutos.</li>
+                        <li>Automação do DRE corporativo (de 2 a 3 dias manuais para atualização diária).</li>
+                        <li>Desenvolvimento de scripts em Python para automação de processos e rotinas de ETL.</li>
+                    </ul>
+                </div>
+
+                <div class="relative group">
+                    <div class="absolute w-4 h-4 bg-brand dark:bg-brand-dark rounded-full -left-[41px] md:-left-[49px] top-1 shadow-[0_0_10px_rgba(242,200,17,0.8)]"></div>
+                    <span class="text-brand dark:text-brand-dark font-bold text-sm md:text-base mb-2 block">Mai/2023 - Out/2024</span>
+                    <h3 class="text-2xl font-bold mb-1 group-hover:text-brand dark:group-hover:text-brand-dark transition-colors">Estagiário de Dados (BI)</h3>
+                    <h4 class="text-lg font-semibold text-gray-600 dark:text-gray-400 mb-4">BRF Pet</h4>
+                    <ul class="list-disc list-outside ml-5 text-gray-600 dark:text-gray-400 space-y-2 leading-relaxed">
+                        <li>Construção e manutenção de soluções de BI utilizando Power BI, SQL e Azure Data Factory.</li>
+                        <li>Criação de pipelines de dados e consolidação a partir do ERP da companhia.</li>
+                        <li>Desenvolvimento de views e procedures avançadas em SQL Server.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="projetos" class="py-24 scroll-mt-20 bg-light-alt dark:bg-dark-alt border-y border-light-border dark:border-dark-border fade-in-section">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold mb-2">Projetos em Destaque</h2>
+            <div class="w-16 h-1 bg-brand dark:bg-brand-dark rounded mt-4 mb-16"></div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-light-bg dark:bg-dark-bg p-8 md:p-10 rounded-2xl border border-light-border dark:border-dark-border shadow-sm hover:-translate-y-2 hover:shadow-xl hover:border-brand dark:hover:border-brand-dark transition-all flex flex-col h-full group">
+                    <h3 class="text-2xl font-bold mb-4 group-hover:text-brand dark:group-hover:text-brand-dark transition-colors">Governança Corporativa de BI</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 flex-grow leading-relaxed">
+                        Padronização de métricas e regras de negócio para +80 utilizadores. Sustentação de um portfólio robusto que gerou uma redução de ~4% em custos operacionais e aumentou a performance da equipa técnica.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Power BI</span>
+                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Governança</span>
+                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Estratégia</span>
+                    </div>
+                </div>
+
+                <div class="bg-light-bg dark:bg-dark-bg p-8 md:p-10 rounded-2xl border border-light-border dark:border-dark-border shadow-sm hover:-translate-y-2 hover:shadow-xl hover:border-brand dark:hover:border-brand-dark transition-all flex flex-col h-full group">
+                    <h3 class="text-2xl font-bold mb-4 group-hover:text-brand dark:group-hover:text-brand-dark transition-colors">Sistema de Sugestão de Pedidos</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 flex-grow leading-relaxed">
+                        Cruzamento complexo de dados (stock vs. vendas vs. ciclo produtivo). Transformou a reposição da loja de semanal para diária, gerando um ganho de produtividade de +5h por semana na ponta.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">DAX Avançado</span>
+                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Logística/Comercial</span>
+                    </div>
+                </div>
+
+                <div class="bg-light-bg dark:bg-dark-bg p-8 md:p-10 rounded-2xl border border-light-border dark:border-dark-border shadow-sm hover:-translate-y-2 hover:shadow-xl hover:border-brand dark:hover:border-brand-dark transition-all flex flex-col h-full group">
+                    <h3 class="text-2xl font-bold mb-4 group-hover:text-brand dark:group-hover:text-brand-dark transition-colors">BI de Faturamento & Controladoria</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 flex-grow leading-relaxed">
+                        Solução detalhando dados ao nível de fatura. Implementação de <strong class="text-gray-900 dark:text-white">Row-Level Security (RLS) por e-mail</strong> e <strong class="text-gray-900 dark:text-white">controlo de acesso por página</strong>. Reduziu em +1h/dia o trabalho de análise manual para dezenas de utilizadores.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">SQL Server</span>
+                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Segurança RLS</span>
+                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Acesso Perfil</span>
+                    </div>
+                </div>
+
+                <div class="bg-light-bg dark:bg-dark-bg p-8 md:p-10 rounded-2xl border border-light-border dark:border-dark-border shadow-sm hover:-translate-y-2 hover:shadow-xl hover:border-brand dark:hover:border-brand-dark transition-all flex flex-col h-full group">
+                    <h3 class="text-2xl font-bold mb-4 group-hover:text-brand dark:group-hover:text-brand-dark transition-colors">Automação de Arquitetura ETL</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 flex-grow leading-relaxed">
+                        Desenvolvimento de rotinas agendadas integrando SharePoint, Oracle e APIs web usando Python e Pentaho, garantindo alta disponibilidade dos modelos semânticos.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Python</span>
+                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Pentaho (PDI)</span>
+                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Integração API</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="competencias" class="py-24 scroll-mt-20 fade-in-section">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold mb-2">Conjunto de Tecnologias</h2>
+            <div class="w-16 h-1 bg-brand dark:bg-brand-dark rounded mt-4 mb-12"></div>
+
+            <div class="flex flex-wrap gap-4 mb-20">
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">📊 Power BI & DAX</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">🗄️ SQL (Procedures/Views)</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">🐍 Python (Automação/ETL)</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">⚙️ Pentaho (PDI)</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">☁️ Azure Data Factory</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">🗃️ Oracle & SQL Server</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">🌐 Integrações via API</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">📈 Modelagem de Dados</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">📑 Power Query</div>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-8 border-l-4 border-brand dark:border-brand-dark pl-4">Soft Skills</h3>
+            <div class="flex flex-wrap gap-4 mb-20">
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">🧠 Pensamento Analítico</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">🤝 Comunicação com Negócio</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">💡 Resolução de Problemas</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">🎯 Visão Estratégica</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">⏱️ Organização e Prioridade</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">👥 Trabalho em Equipa</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">📈 Mentalidade Data-Driven</div>
+                <div class="px-6 py-3 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold">📚 Aprendizagem Contínua</div>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-8 border-l-4 border-brand dark:border-brand-dark pl-4">Setores de Atuação</h3>
+            <div class="flex flex-wrap gap-4">
+                <div class="px-8 py-4 rounded-lg font-bold text-gray-600 dark:text-gray-400 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:text-gray-900 dark:hover:text-white hover:border-brand dark:hover:border-brand-dark hover:-translate-y-1 transition-all">Diretoria Executiva</div>
+                <div class="px-8 py-4 rounded-lg font-bold text-gray-600 dark:text-gray-400 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:text-gray-900 dark:hover:text-white hover:border-brand dark:hover:border-brand-dark hover:-translate-y-1 transition-all">Comercial & Vendas</div>
+                <div class="px-8 py-4 rounded-lg font-bold text-gray-600 dark:text-gray-400 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:text-gray-900 dark:hover:text-white hover:border-brand dark:hover:border-brand-dark hover:-translate-y-1 transition-all">Controladoria / Finanças</div>
+                <div class="px-8 py-4 rounded-lg font-bold text-gray-600 dark:text-gray-400 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:text-gray-900 dark:hover:text-white hover:border-brand dark:hover:border-brand-dark hover:-translate-y-1 transition-all">Logística / PPCP</div>
+                <div class="px-8 py-4 rounded-lg font-bold text-gray-600 dark:text-gray-400 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:text-gray-900 dark:hover:text-white hover:border-brand dark:hover:border-brand-dark hover:-translate-y-1 transition-all">Produção Industrial</div>
+                <div class="px-8 py-4 rounded-lg font-bold text-gray-600 dark:text-gray-400 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:text-gray-900 dark:hover:text-white hover:border-brand dark:hover:border-brand-dark hover:-translate-y-1 transition-all">Qualidade & RH</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="formacao" class="py-24 scroll-mt-20 bg-light-alt dark:bg-dark-alt border-y border-light-border dark:border-dark-border fade-in-section">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold mb-2">Formação & Cursos</h2>
+            <div class="w-16 h-1 bg-brand dark:bg-brand-dark rounded mt-4 mb-16"></div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-bold mb-8 border-l-4 border-brand dark:border-brand-dark pl-4">Formação Académica</h3>
+                    <div class="space-y-6">
+                        <div class="bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border p-6 rounded-xl shadow-sm hover:border-brand dark:hover:border-brand-dark hover:translate-x-2 transition-all">
+                            <h4 class="text-xl font-bold mb-1">Inteligência de Mercado e Análise de Dados</h4>
+                            <p class="text-gray-600 dark:text-gray-400 font-semibold">Anhanguera</p>
+                            <p class="text-brand dark:text-brand-dark font-bold text-sm mt-2">2026 – 2028</p>
+                        </div>
+                        <div class="bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border p-6 rounded-xl shadow-sm hover:border-brand dark:hover:border-brand-dark hover:translate-x-2 transition-all">
+                            <h4 class="text-xl font-bold mb-1">Técnico em Informática</h4>
+                            <p class="text-gray-600 dark:text-gray-400 font-semibold">Instituto de Educação Ivoti</p>
+                            <p class="text-brand dark:text-brand-dark font-bold text-sm mt-2">Fev/2021 – Dez/2023</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold mb-8 border-l-4 border-brand dark:border-brand-dark pl-4">Certificações Técnicas</h3>
+                    <div class="space-y-6">
+                        <div class="bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border p-6 rounded-xl shadow-sm hover:border-brand dark:hover:border-brand-dark hover:translate-x-2 transition-all">
+                            <h4 class="text-xl font-bold mb-1">Desenvolvimento Web Completo</h4>
+                            <p class="text-gray-600 dark:text-gray-400 font-semibold">Udemy</p>
+                            <p class="text-brand dark:text-brand-dark font-bold text-sm mt-2">114 horas</p>
+                        </div>
+                        <div class="bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border p-6 rounded-xl shadow-sm hover:border-brand dark:hover:border-brand-dark hover:translate-x-2 transition-all">
+                            <h4 class="text-xl font-bold mb-1">SQL do Básico ao Avançado</h4>
+                            <p class="text-gray-600 dark:text-gray-400 font-semibold">Udemy</p>
+                            <p class="text-brand dark:text-brand-dark font-bold text-sm mt-2">17 horas</p>
+                        </div>
+                        <div class="bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border p-6 rounded-xl shadow-sm hover:border-brand dark:hover:border-brand-dark hover:translate-x-2 transition-all">
+                            <h4 class="text-xl font-bold mb-1">Missão Zero Bootcamp (Data Analytics)</h4>
+                            <p class="text-gray-600 dark:text-gray-400 font-semibold">Xperiun</p>
+                            <p class="text-brand dark:text-brand-dark font-bold text-sm mt-2">10 horas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contato" class="py-32 scroll-mt-20 fade-in-section text-center">
+        <div class="max-w-3xl mx-auto px-6 lg:px-8">
+            <h2 class="text-4xl md:text-5xl font-bold mb-2">Vamos conversar?</h2>
+            <div class="w-16 h-1 bg-brand dark:bg-brand-dark rounded mt-4 mb-12 mx-auto"></div>
+            
+            <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-10 leading-relaxed">
+                Disponível para oportunidades em modelo Remoto ou Híbrido (Ivoti/RS). Se a sua empresa procura transformar informações dispersas em vantagens competitivas estruturadas, envie uma mensagem e vamos marcar um bate-papo.
+            </p>
+            
+            <div class="text-xl font-semibold text-gray-800 dark:text-gray-300 mb-12 space-y-2">
+                <p>📱 (51) 9 9186-8412</p>
+                <p>📧 jean.f.mattos@gmail.com</p>
+            </div>
+            
+            <a href="https://wa.me/5551991868412?text=Ol%C3%A1%20Jean,%20vi%20o%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar!" target="_blank" rel="noopener noreferrer" class="inline-flex justify-center items-center gap-3 px-10 py-5 rounded-md font-bold text-lg text-white bg-brand dark:bg-brand-dark hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(242,200,17,0.3)] transition-all">
+                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+                </svg>
+                Chamar no WhatsApp
+            </a>
+        </div>
+    </section>
+
+    <script>
+        // LÓGICA DO TEMA CLARO/ESCURO (Tailwind Class Mode)
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const htmlElement = document.documentElement;
+
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            htmlElement.classList.remove('dark');
+            themeIcon.textContent = '🌙';
+        } else {
+            htmlElement.classList.add('dark');
+            themeIcon.textContent = '☀️';
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                themeIcon.textContent = '🌙';
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.textContent = '☀️';
+            }
+        });
+
+        // LÓGICA DO MENU MOBILE
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            if (mobileMenu.style.maxHeight && mobileMenu.style.maxHeight !== '0px') {
+                mobileMenu.style.maxHeight = '0px';
+                mobileMenu.classList.remove('border-b', 'border-light-border', 'dark:border-dark-border');
+            } else {
+                mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+                mobileMenu.classList.add('border-b', 'border-light-border', 'dark:border-dark-border');
+            }
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+
+        // ANIMAÇÕES DE SCROLL E KPIs
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    if(entry.target.id === 'sobre') {
+                        startCounters();
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-section').forEach(el => observer.observe(el));
+
+        let countersStarted = false;
+        function startCounters() {
+            if (countersStarted) return;
+            countersStarted = true;
+            
+            const counters = document.querySelectorAll('.kpi-number');
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const duration = 2000; 
+                const increment = target / (duration / 16); 
+                
+                let current = 0;
+                const updateCounter = () => {
+                    current += increment;
+                    if (current < target) {
+                        counter.innerText = Math.ceil(current) + (target === 85 || target === 6 ? '%' : target === 100 ? '+' : '');
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.innerText = target + (target === 85 || target === 6 ? '%' : target === 100 ? '+' : '');
+                    }
+                };
+                updateCounter();
+            });
+        }
+    </script>
+</body>
+</html>
