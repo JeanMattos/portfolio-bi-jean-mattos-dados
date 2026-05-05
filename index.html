@@ -1,484 +1,732 @@
 <!DOCTYPE html>
-<html lang="pt-PT" class="dark scroll-smooth">
+<html lang="pt-BR" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jean Mattos | Analista de Dados & BI</title>
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            DEFAULT: '#D4A000', /* Amarelo para Tema Claro */
-                            dark: '#F2C811',    /* Amarelo Power BI para Tema Escuro */
-                        },
-                        dark: {
-                            bg: '#0F111A',
-                            alt: '#161925',
-                            surface: '#1E2130',
-                            hover: '#2A2D3E',
-                            border: 'rgba(255, 255, 255, 0.05)'
-                        },
-                        light: {
-                            bg: '#F8F9FA',
-                            alt: '#FFFFFF',
-                            surface: '#FFFFFF',
-                            hover: '#F1F3F5',
-                            border: 'rgba(0, 0, 0, 0.08)'
-                        }
+                        brand: { DEFAULT: '#F2C811', dim: '#c9a70e' },
+                        ink: { 900: '#0A0C12', 800: '#111420', 700: '#181C2A', 600: '#1E2336', 500: '#2A2F45' },
+                        paper: { 100: '#F9F7F2', 200: '#F0EDE5', 300: '#E4DFD4' },
                     },
                     fontFamily: {
-                        sans: ['Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                        serif: ['"DM Serif Display"', 'Georgia', 'serif'],
+                        sans: ['Outfit', 'Helvetica', 'Arial', 'sans-serif'],
+                        mono: ['"DM Mono"', 'monospace'],
                     }
                 }
             }
         }
     </script>
-
     <style>
-        /* Padrão de Fundo (Grid) que é mais fácil gerir com CSS puro */
-        .bg-grid-pattern {
-            background-image: radial-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-        .dark .bg-grid-pattern {
-            background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+        :root { --brand: #F2C811; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0A0C12; }
+        ::-webkit-scrollbar-thumb { background: #F2C811; border-radius: 3px; }
+
+        /* Grid bg */
+        .grid-bg {
+            background-image:
+                linear-gradient(rgba(242,200,17,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(242,200,17,0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
         }
 
-        /* Classes de Animação Base */
-        .fade-in-section {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        /* Noise overlay */
+        .noise::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 9999; opacity: 0.6;
         }
-        .fade-in-section.is-visible {
-            opacity: 1;
-            transform: translateY(0);
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
+        @keyframes slideRight {
+            from { opacity: 0; transform: translateX(-30px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(242,200,17,0.3); }
+            50%       { box-shadow: 0 0 40px rgba(242,200,17,0.6); }
+        }
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50%       { transform: scale(1.4); opacity: 0.7; }
+        }
+        @keyframes marquee {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .animate-fade-up   { animation: fadeUp 0.9s ease forwards; }
+        .animate-slide-right { animation: slideRight 0.7s ease forwards; }
+        .animate-scale-in  { animation: scaleIn 0.6s ease forwards; }
+
+        .reveal { opacity: 0; transform: translateY(35px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* Hero gradient orb */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+        }
+
+        /* Ticker */
+        .ticker-wrap { overflow: hidden; }
+        .ticker-track { display: flex; width: max-content; animation: marquee 28s linear infinite; }
+        .ticker-track:hover { animation-play-state: paused; }
+
+        /* Nav active */
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: -4px; left: 0;
+            width: 0; height: 2px; background: var(--brand);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        /* Card hover */
+        .proj-card {
+            transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+        }
+        .proj-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(242,200,17,0.3);
+            border-color: rgba(242,200,17,0.4) !important;
+        }
+
+        /* Skill pill */
+        .skill-pill {
+            transition: all 0.25s ease;
+            cursor: default;
+        }
+        .skill-pill:hover {
+            background: rgba(242,200,17,0.15);
+            border-color: rgba(242,200,17,0.6);
+            color: #F2C811;
+            transform: translateY(-2px);
+        }
+
+        /* Timeline dot pulse */
+        .tl-dot { animation: pulse-dot 2.5s ease-in-out infinite; }
+
+        /* Section number */
+        .sec-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: #F2C811;
+            letter-spacing: 0.15em;
+            opacity: 0.7;
+        }
+
+        /* KPI card */
+        .kpi-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(242,200,17,0.15);
+        }
+
+        /* Diagonal section divider */
+        .clip-diagonal { clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%); }
+        .clip-diagonal-inv { clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 100%); }
+
+        /* Highlight text */
+        .highlight {
+            background: linear-gradient(120deg, rgba(242,200,17,0.25) 0%, rgba(242,200,17,0.1) 100%);
+            border-left: 3px solid #F2C811;
+            padding: 2px 10px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Mobile menu */
+        #mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+        #mobile-menu.open { max-height: 400px; }
     </style>
 </head>
-<body class="bg-light-bg text-gray-900 dark:bg-dark-bg dark:text-white transition-colors duration-300 overflow-x-hidden antialiased">
+<body class="noise bg-ink-900 text-white font-sans overflow-x-hidden">
 
-    <nav class="fixed w-full top-0 z-50 backdrop-blur-md bg-white/90 dark:bg-[#0F111A]/95 border-b border-light-border dark:border-dark-border transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex-shrink-0 font-bold text-xl md:text-2xl tracking-widest uppercase">
-                    JEAN <span class="text-brand dark:text-brand-dark">MATTOS</span>
-                </div>
-                
-                <div class="flex items-center gap-6 lg:gap-10">
-                    <div class="hidden lg:flex items-center gap-8">
-                        <a href="#sobre" class="text-sm font-semibold uppercase tracking-wider hover:text-brand dark:hover:text-brand-dark transition-colors">Sobre</a>
-                        <a href="#experiencia" class="text-sm font-semibold uppercase tracking-wider hover:text-brand dark:hover:text-brand-dark transition-colors">Experiência</a>
-                        <a href="#projetos" class="text-sm font-semibold uppercase tracking-wider hover:text-brand dark:hover:text-brand-dark transition-colors">Projetos</a>
-                        <a href="#competencias" class="text-sm font-semibold uppercase tracking-wider hover:text-brand dark:hover:text-brand-dark transition-colors">Competências</a>
-                        <a href="#formacao" class="text-sm font-semibold uppercase tracking-wider hover:text-brand dark:hover:text-brand-dark transition-colors">Formação</a>
-                        <a href="#contato" class="text-sm font-semibold uppercase tracking-wider hover:text-brand dark:hover:text-brand-dark transition-colors">Contato</a>
-                    </div>
-                    
-                    <div class="flex items-center gap-4">
-                        <a href="https://www.linkedin.com/in/jean-f-mattos" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="text-gray-600 dark:text-gray-400 hover:text-brand dark:hover:text-brand-dark transition-colors">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                            </svg>
-                        </a>
-
-                        <button id="themeToggle" class="w-10 h-10 rounded-full flex items-center justify-center border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:border-brand dark:hover:border-brand-dark hover:text-brand dark:hover:text-brand-dark hover:scale-110 transition-all ml-2" aria-label="Alternar tema">
-                            <span id="themeIcon" class="text-lg">☀️</span>
-                        </button>
-                        
-                        <button id="mobileMenuBtn" class="lg:hidden text-3xl focus:outline-none hover:text-brand dark:hover:text-brand-dark transition-colors ml-2">
-                            ☰
-                        </button>
-                    </div>
-                </div>
+    <!-- NAV -->
+    <nav class="fixed top-0 left-0 right-0 z-50 border-b border-white/5 backdrop-blur-xl bg-ink-900/80">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#" class="font-serif text-xl tracking-tight">
+                Jean <span class="text-brand">Mattos</span>
+            </a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#sobre" class="nav-link text-xs font-semibold uppercase tracking-widest text-gray-400 hover:text-white transition-colors">Sobre</a>
+                <a href="#experiencia" class="nav-link text-xs font-semibold uppercase tracking-widest text-gray-400 hover:text-white transition-colors">Experiência</a>
+                <a href="#projetos" class="nav-link text-xs font-semibold uppercase tracking-widest text-gray-400 hover:text-white transition-colors">Projetos</a>
+                <a href="#stack" class="nav-link text-xs font-semibold uppercase tracking-widest text-gray-400 hover:text-white transition-colors">Stack</a>
+                <a href="#formacao" class="nav-link text-xs font-semibold uppercase tracking-widest text-gray-400 hover:text-white transition-colors">Formação</a>
+                <a href="#contato" class="nav-link text-xs font-semibold uppercase tracking-widest text-gray-400 hover:text-white transition-colors">Contato</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="https://www.linkedin.com/in/jean-f-mattos" target="_blank" class="text-gray-500 hover:text-brand transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+                <button id="menu-btn" class="md:hidden text-gray-400 hover:text-white p-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
             </div>
         </div>
-
-        <div id="mobileMenu" class="lg:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-white/95 dark:bg-[#0F111A]/95 backdrop-blur-md border-b border-transparent">
-            <div class="flex flex-col items-center py-4 space-y-6">
-                <a href="#sobre" class="mobile-link text-base font-semibold uppercase tracking-wider w-full text-center py-2 hover:bg-light-hover dark:hover:bg-dark-hover">Sobre</a>
-                <a href="#experiencia" class="mobile-link text-base font-semibold uppercase tracking-wider w-full text-center py-2 hover:bg-light-hover dark:hover:bg-dark-hover">Experiência</a>
-                <a href="#projetos" class="mobile-link text-base font-semibold uppercase tracking-wider w-full text-center py-2 hover:bg-light-hover dark:hover:bg-dark-hover">Projetos</a>
-                <a href="#competencias" class="mobile-link text-base font-semibold uppercase tracking-wider w-full text-center py-2 hover:bg-light-hover dark:hover:bg-dark-hover">Competências</a>
-                <a href="#formacao" class="mobile-link text-base font-semibold uppercase tracking-wider w-full text-center py-2 hover:bg-light-hover dark:hover:bg-dark-hover">Formação</a>
-                <a href="#contato" class="mobile-link text-base font-semibold uppercase tracking-wider w-full text-center py-2 hover:bg-light-hover dark:hover:bg-dark-hover">Contato</a>
+        <div id="mobile-menu" class="md:hidden bg-ink-800 border-t border-white/5">
+            <div class="px-6 py-4 flex flex-col gap-4">
+                <a href="#sobre" class="mobile-nav text-sm font-semibold text-gray-400 hover:text-brand transition-colors">Sobre</a>
+                <a href="#experiencia" class="mobile-nav text-sm font-semibold text-gray-400 hover:text-brand transition-colors">Experiência</a>
+                <a href="#projetos" class="mobile-nav text-sm font-semibold text-gray-400 hover:text-brand transition-colors">Projetos</a>
+                <a href="#stack" class="mobile-nav text-sm font-semibold text-gray-400 hover:text-brand transition-colors">Stack</a>
+                <a href="#formacao" class="mobile-nav text-sm font-semibold text-gray-400 hover:text-brand transition-colors">Formação</a>
+                <a href="#contato" class="mobile-nav text-sm font-semibold text-gray-400 hover:text-brand transition-colors">Contato</a>
             </div>
         </div>
     </nav>
 
-    <section id="hero" class="relative min-h-screen flex items-center pt-20">
-        <div class="absolute inset-0 bg-grid-pattern opacity-50 z-0"></div>
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 w-full fade-in-section">
-            <div class="max-w-3xl">
-                <p class="text-brand dark:text-brand-dark font-bold tracking-[0.2em] text-sm md:text-base uppercase mb-4">
-                    Analista de Dados & Especialista BI
-                </p>
-                <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight tracking-tight">
-                    Jean Mattos
+    <!-- HERO -->
+    <section class="relative min-h-screen grid-bg flex items-center pt-16 overflow-hidden">
+        <!-- Orbs -->
+        <div class="orb w-[600px] h-[600px] bg-brand/10 top-[-200px] right-[-200px]"></div>
+        <div class="orb w-[400px] h-[400px] bg-blue-600/8 bottom-[-100px] left-[-100px]"></div>
+
+        <div class="max-w-6xl mx-auto px-6 py-24 w-full">
+            <div class="max-w-4xl">
+                <p class="sec-num mb-6 animate-fade-up" style="animation-delay:0.1s">// 01 — Analista de Dados Pleno · BI End-to-End</p>
+
+                <h1 class="font-serif text-6xl md:text-8xl lg:text-9xl leading-none mb-8 animate-fade-up" style="animation-delay:0.2s">
+                    Jean<br>
+                    <span class="text-brand italic">Mattos</span>
                 </h1>
-                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-10 max-w-2xl leading-relaxed">
-                    Transformando dados complexos em inteligência de negócio, processos automatizados e indicadores estratégicos para a tomada de decisão.
+
+                <p class="text-gray-400 text-lg md:text-xl max-w-2xl leading-relaxed mb-12 animate-fade-up" style="animation-delay:0.35s">
+                    Transformo dados complexos em inteligência de negócio — construindo pipelines, modelando dados e entregando dashboards executivos que apoiam decisões estratégicas em Comercial, Financeiro, Produção e Controladoria.
                 </p>
-                
-                <div class="flex flex-wrap gap-4 items-center">
-                    <a href="#projetos" class="inline-flex justify-center items-center px-8 py-4 rounded-md font-bold text-white bg-brand dark:bg-brand-dark hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(242,200,17,0.3)] transition-all">
-                        Ver Projetos Estratégicos
+
+                <div class="flex flex-wrap gap-4 animate-fade-up" style="animation-delay:0.5s">
+                    <a href="#projetos" class="inline-flex items-center gap-2 px-7 py-3.5 bg-brand text-ink-900 font-bold rounded text-sm uppercase tracking-wider hover:bg-brand/90 transition-colors">
+                        Ver Projetos
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                     </a>
-                    
-                    <a href="#contato" class="inline-flex justify-center items-center px-8 py-4 rounded-md font-bold border-2 border-gray-300 dark:border-dark-border hover:border-brand dark:hover:border-brand-dark hover:text-brand dark:hover:text-brand-dark transition-all">
-                        Entre em Contato
+                    <a href="#contato" class="inline-flex items-center gap-2 px-7 py-3.5 border border-white/15 text-white font-semibold rounded text-sm uppercase tracking-wider hover:border-brand/50 hover:text-brand transition-colors">
+                        Contato
                     </a>
-                    
-                    <a href="https://www.linkedin.com/in/jean-f-mattos" target="_blank" rel="noopener noreferrer" aria-label="Acessar LinkedIn" class="inline-flex justify-center items-center p-4 rounded-md font-bold border-2 border-gray-300 dark:border-dark-border hover:border-brand dark:hover:border-brand-dark hover:text-brand dark:hover:text-brand-dark transition-all">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                        </svg>
-                    </a>
+                </div>
+
+                <!-- Mini stats -->
+                <div class="flex flex-wrap gap-8 mt-16 pt-12 border-t border-white/8 animate-fade-up" style="animation-delay:0.65s">
+                    <div>
+                        <div class="font-mono text-3xl font-bold text-brand">3+</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-widest mt-1">Anos de experiência</div>
+                    </div>
+                    <div>
+                        <div class="font-mono text-3xl font-bold text-brand">100+</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-widest mt-1">Dashboards ativos</div>
+                    </div>
+                    <div>
+                        <div class="font-mono text-3xl font-bold text-brand">85%</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-widest mt-1">Redução tempo ETL</div>
+                    </div>
+                    <div>
+                        <div class="font-mono text-3xl font-bold text-brand">600h</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-widest mt-1">Economia/mês gerada</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+    </section>
+
+    <!-- TICKER -->
+    <div class="bg-brand py-3 overflow-hidden">
+        <div class="ticker-wrap">
+            <div class="ticker-track">
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Power BI</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">DAX Avançado</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Python ETL</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">SQL Server</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Pentaho PDI</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Oracle</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Modelagem de Dados</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Governança de Dados</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Power Query</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Azure Data Factory</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">n8n Automação</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">SharePoint</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <!-- Duplicate for seamless loop -->
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Power BI</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">DAX Avançado</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Python ETL</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">SQL Server</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Pentaho PDI</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Oracle</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Modelagem de Dados</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Governança de Dados</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Power Query</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">Azure Data Factory</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">n8n Automação</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+                <span class="font-mono font-bold text-ink-900 text-sm px-6">SharePoint</span><span class="text-ink-900 opacity-40 text-sm">◆</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOBRE -->
+    <section id="sobre" class="py-28 bg-ink-800">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="reveal mb-16">
+                <p class="sec-num mb-3">// 02 — Perfil</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Sobre mim</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <p class="text-gray-300 text-lg leading-relaxed mb-6">
+                        Sou <strong class="text-white">Analista de Dados Pleno</strong> com mais de <strong class="text-brand">3 anos de experiência</strong> em Business Intelligence, ETL, modelagem de dados, governança e automação de processos analíticos.
+                    </p>
+                    <p class="text-gray-400 leading-relaxed mb-8">
+                        Atuo de forma <strong class="text-white">end-to-end</strong> — do levantamento de requisitos com a diretoria até a entrega de dashboards executivos e sustentação de ambientes analíticos. Tenho experiência com Power BI, DAX, SQL, Python, Pentaho, Oracle, SQL Server, SharePoint e APIs, apoiando decisões nas áreas Comercial, Financeira, Produção, Logística e Controladoria.
+                    </p>
+                    <div class="flex items-center gap-3 text-sm text-gray-500">
+                        <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Ivoti/RS — Disponível Remoto ou Híbrido
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 reveal reveal-delay-2">
+                    <div class="kpi-card bg-ink-700 border border-white/8 rounded-xl p-6 text-center">
+                        <div class="font-serif text-5xl text-brand mb-2" data-count="100" data-suffix="+">0</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-widest">Dashboards ativos</div>
+                    </div>
+                    <div class="kpi-card bg-ink-700 border border-white/8 rounded-xl p-6 text-center">
+                        <div class="font-serif text-5xl text-brand mb-2" data-count="85" data-suffix="%">0</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-widest">Redução tempo ETL</div>
+                    </div>
+                    <div class="kpi-card bg-ink-700 border border-white/8 rounded-xl p-6 text-center">
+                        <div class="font-serif text-5xl text-brand mb-2" data-count="600" data-suffix="h">0</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-widest">Economia/mês gerada</div>
+                    </div>
+                    <div class="kpi-card bg-ink-700 border border-white/8 rounded-xl p-6 text-center">
+                        <div class="font-serif text-5xl text-brand mb-2" data-count="6" data-suffix="%">0</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-widest">Ganho rendimento prod.</div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="sobre" class="py-24 scroll-mt-20 bg-light-alt dark:bg-dark-alt border-y border-light-border dark:border-dark-border fade-in-section">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <h2 class="text-3xl md:text-4xl font-bold mb-2">Inteligência Orientada a Resultados</h2>
-            <div class="w-16 h-1 bg-brand dark:bg-brand-dark rounded mt-4 mb-10"></div>
-            
-            <p class="text-lg text-gray-600 dark:text-gray-400 max-w-4xl leading-relaxed mb-16">
-                Atuo há mais de 2 anos com o ciclo completo de inteligência corporativa — da estruturação e engenharia de dados (ETL) à entrega de painéis executivos. Especialista na criação de fluxos de dados escaláveis que reduzem custos operacionais e aumentam a visibilidade estratégica do negócio, conectando tecnologia às necessidades de Controladorias, Diretorias e áreas de Produção.
-            </p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-light-surface dark:bg-dark-surface p-8 rounded-xl border border-light-border dark:border-dark-border border-b-4 border-b-brand dark:border-b-brand-dark shadow-sm hover:-translate-y-2 hover:shadow-lg transition-all text-center group">
-                    <div class="kpi-number text-5xl font-extrabold text-brand dark:text-brand-dark mb-2" data-target="32">0</div>
-                    <div class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest group-hover:text-gray-900 dark:group-hover:text-white transition-colors">Dashboards Ativos</div>
-                </div>
-                <div class="bg-light-surface dark:bg-dark-surface p-8 rounded-xl border border-light-border dark:border-dark-border border-b-4 border-b-brand dark:border-b-brand-dark shadow-sm hover:-translate-y-2 hover:shadow-lg transition-all text-center group">
-                    <div class="kpi-number text-5xl font-extrabold text-brand dark:text-brand-dark mb-2" data-target="100">0</div>
-                    <div class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest group-hover:text-gray-900 dark:group-hover:text-white transition-colors">Utilizadores</div>
-                </div>
-                <div class="bg-light-surface dark:bg-dark-surface p-8 rounded-xl border border-light-border dark:border-dark-border border-b-4 border-b-brand dark:border-b-brand-dark shadow-sm hover:-translate-y-2 hover:shadow-lg transition-all text-center group">
-                    <div class="kpi-number text-5xl font-extrabold text-brand dark:text-brand-dark mb-2" data-target="85">0</div>
-                    <div class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest group-hover:text-gray-900 dark:group-hover:text-white transition-colors">% Redução Tempo ETL</div>
-                </div>
-                <div class="bg-light-surface dark:bg-dark-surface p-8 rounded-xl border border-light-border dark:border-dark-border border-b-4 border-b-brand dark:border-b-brand-dark shadow-sm hover:-translate-y-2 hover:shadow-lg transition-all text-center group">
-                    <div class="kpi-number text-5xl font-extrabold text-brand dark:text-brand-dark mb-2" data-target="6">0</div>
-                    <div class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest group-hover:text-gray-900 dark:group-hover:text-white transition-colors">% Ganho Rendimento</div>
-                </div>
+    <!-- EXPERIÊNCIA -->
+    <section id="experiencia" class="py-28 bg-ink-900 grid-bg">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="reveal mb-16">
+                <p class="sec-num mb-3">// 03 — Trajetória</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Experiência Profissional</h2>
             </div>
-        </div>
-    </section>
 
-    <section id="experiencia" class="py-24 scroll-mt-20 fade-in-section">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <h2 class="text-3xl md:text-4xl font-bold mb-2">Trajetória Profissional</h2>
-            <div class="w-16 h-1 bg-brand dark:bg-brand-dark rounded mt-4 mb-16"></div>
+            <div class="relative pl-8 border-l border-white/10 space-y-16">
 
-            <div class="border-l-2 border-gray-300 dark:border-dark-border pl-8 md:pl-10 relative ml-2 md:ml-4">
-                
-                <div class="mb-16 relative group">
-                    <div class="absolute w-4 h-4 bg-brand dark:bg-brand-dark rounded-full -left-[41px] md:-left-[49px] top-1 shadow-[0_0_10px_rgba(242,200,17,0.8)]"></div>
-                    <span class="text-brand dark:text-brand-dark font-bold text-sm md:text-base mb-2 block">Out/2024 - Atual</span>
-                    <h3 class="text-2xl font-bold mb-1 group-hover:text-brand dark:group-hover:text-brand-dark transition-colors">Analista de Dados (BI)</h3>
-                    <h4 class="text-lg font-semibold text-gray-600 dark:text-gray-400 mb-4">Grupo Minuano (Curtume & Estofados)</h4>
-                    <ul class="list-disc list-outside ml-5 text-gray-600 dark:text-gray-400 space-y-2 leading-relaxed">
-                        <li>Arquitetura e sustentação do ecossistema de BI do grupo, integrando múltiplas fontes (Oracle, SQL Server, SharePoint, APIs).</li>
-                        <li>Redução drástica do tempo de atualização de relatórios de 4h para menos de 30 minutos.</li>
-                        <li>Automação do DRE corporativo (de 2 a 3 dias manuais para atualização diária).</li>
-                        <li>Desenvolvimento de scripts em Python para automação de processos e rotinas de ETL.</li>
+                <!-- Job 1 -->
+                <div class="reveal relative">
+                    <div class="absolute -left-[41px] top-1 w-4 h-4 bg-brand rounded-full tl-dot shadow-[0_0_12px_rgba(242,200,17,0.7)]"></div>
+                    <div class="flex flex-wrap items-start gap-4 mb-4">
+                        <div class="flex-1">
+                            <span class="font-mono text-xs text-brand/70 tracking-widest">Out/2024 — Atual</span>
+                            <h3 class="font-serif text-2xl md:text-3xl mt-1">Analista de Dados Pleno</h3>
+                            <p class="text-gray-500 font-medium mt-0.5">Grupo Minuano — Curtume & Estofados</p>
+                        </div>
+                        <span class="px-3 py-1 bg-brand/15 border border-brand/30 text-brand text-xs font-bold uppercase rounded tracking-wider">Atual</span>
+                    </div>
+                    <ul class="space-y-3 text-gray-400 text-sm leading-relaxed">
+                        <li class="flex gap-3"><span class="text-brand mt-0.5 shrink-0">→</span> Lidero o ambiente corporativo de Business Intelligence, aplicando governança de dados, padronização de indicadores e melhoria contínua.</li>
+                        <li class="flex gap-3"><span class="text-brand mt-0.5 shrink-0">→</span> Atuo de forma end-to-end: requisitos, ETL com Python e Pentaho, modelagem, DAX e dashboards em Power BI.</li>
+                        <li class="flex gap-3"><span class="text-brand mt-0.5 shrink-0">→</span> Mantenho mais de <strong class="text-white">100 dashboards ativos</strong> atendendo cerca de <strong class="text-white">80 a 100 usuários</strong> com foco em performance e disponibilidade.</li>
+                        <li class="flex gap-3"><span class="text-brand mt-0.5 shrink-0">→</span> Integro dados de ERP Antara, Oracle, SQL Server, SharePoint e APIs, garantindo rastreabilidade e qualidade da informação.</li>
+                        <li class="flex gap-3"><span class="text-brand mt-0.5 shrink-0">→</span> Reduzi o tempo de atualização dos relatórios em <strong class="text-white">85%</strong>, de 3–4 horas para menos de 30 minutos.</li>
+                        <li class="flex gap-3"><span class="text-brand mt-0.5 shrink-0">→</span> Automatizei processos gerando redução de <strong class="text-white">20% no tempo operacional diário</strong> (≈ 1h30/dia) para mais de 80 usuários.</li>
                     </ul>
                 </div>
 
-                <div class="relative group">
-                    <div class="absolute w-4 h-4 bg-brand dark:bg-brand-dark rounded-full -left-[41px] md:-left-[49px] top-1 shadow-[0_0_10px_rgba(242,200,17,0.8)]"></div>
-                    <span class="text-brand dark:text-brand-dark font-bold text-sm md:text-base mb-2 block">Mai/2023 - Out/2024</span>
-                    <h3 class="text-2xl font-bold mb-1 group-hover:text-brand dark:group-hover:text-brand-dark transition-colors">Estagiário de Dados (BI)</h3>
-                    <h4 class="text-lg font-semibold text-gray-600 dark:text-gray-400 mb-4">BRF Pet</h4>
-                    <ul class="list-disc list-outside ml-5 text-gray-600 dark:text-gray-400 space-y-2 leading-relaxed">
-                        <li>Construção e manutenção de soluções de BI utilizando Power BI, SQL e Azure Data Factory.</li>
-                        <li>Criação de pipelines de dados e consolidação a partir do ERP da companhia.</li>
-                        <li>Desenvolvimento de views e procedures avançadas em SQL Server.</li>
+                <!-- Job 2 -->
+                <div class="reveal relative">
+                    <div class="absolute -left-[41px] top-1 w-4 h-4 bg-white/30 rounded-full border border-white/20"></div>
+                    <span class="font-mono text-xs text-brand/70 tracking-widest">Mai/2023 — Out/2024</span>
+                    <h3 class="font-serif text-2xl md:text-3xl mt-1">Estagiário de Dados (BI)</h3>
+                    <p class="text-gray-500 font-medium mt-0.5 mb-4">BRF Pet</p>
+                    <ul class="space-y-3 text-gray-400 text-sm leading-relaxed">
+                        <li class="flex gap-3"><span class="text-brand mt-0.5 shrink-0">→</span> Construção e manutenção de arquitetura de BI com Power BI, SQL e Azure Data Factory.</li>
+                        <li class="flex gap-3"><span class="text-brand mt-0.5 shrink-0">→</span> Rotinas de ETL e consolidação de dados oriundos do ERP TOTVS/Protheus.</li>
+                        <li class="flex gap-3"><span class="text-brand mt-0.5 shrink-0">→</span> Criação e otimização de Views e Procedures em SQL para performance, integridade e disponibilidade das bases analíticas.</li>
                     </ul>
                 </div>
 
+                <!-- Job 3 -->
+                <div class="reveal relative">
+                    <div class="absolute -left-[41px] top-1 w-4 h-4 bg-white/20 rounded-full border border-white/10"></div>
+                    <span class="font-mono text-xs text-brand/70 tracking-widest">Jan/2022 — Abr/2023</span>
+                    <h3 class="font-serif text-xl md:text-2xl mt-1">Estágios Iniciais</h3>
+                    <p class="text-gray-500 font-medium mt-0.5 mb-4">EMEF Aroni Mossmann · IDATA Software</p>
+                    <ul class="space-y-3 text-gray-400 text-sm leading-relaxed">
+                        <li class="flex gap-3"><span class="text-brand mt-0.5 shrink-0">→</span> Suporte técnico e manutenção de infraestrutura de TI (EMEF).</li>
+                        <li class="flex gap-3"><span class="text-brand mt-0.5 shrink-0">→</span> Desenvolvimento de APIs em C# e integração de sistemas (IDATA Software).</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="projetos" class="py-24 scroll-mt-20 bg-light-alt dark:bg-dark-alt border-y border-light-border dark:border-dark-border fade-in-section">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <h2 class="text-3xl md:text-4xl font-bold mb-2">Projetos em Destaque</h2>
-            <div class="w-16 h-1 bg-brand dark:bg-brand-dark rounded mt-4 mb-16"></div>
+    <!-- PROJETOS -->
+    <section id="projetos" class="py-28 bg-ink-800">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="reveal mb-16">
+                <p class="sec-num mb-3">// 04 — Cases</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Projetos de Destaque</h2>
+            </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-light-bg dark:bg-dark-bg p-8 md:p-10 rounded-2xl border border-light-border dark:border-dark-border shadow-sm hover:-translate-y-2 hover:shadow-xl hover:border-brand dark:hover:border-brand-dark transition-all flex flex-col h-full group">
-                    <h3 class="text-2xl font-bold mb-4 group-hover:text-brand dark:group-hover:text-brand-dark transition-colors">Governança Corporativa de BI</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 flex-grow leading-relaxed">
-                        Padronização de métricas e regras de negócio para +80 utilizadores. Sustentação de um portfólio robusto que gerou uma redução de ~4% em custos operacionais e aumentou a performance da equipa técnica.
+            <div class="grid md:grid-cols-2 gap-6">
+
+                <!-- Card 1 -->
+                <div class="proj-card reveal bg-ink-700 border border-white/8 rounded-2xl p-8 flex flex-col">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="font-mono text-xs text-brand/60 tracking-widest">01</span>
+                        <span class="px-2 py-1 bg-green-500/15 border border-green-500/30 text-green-400 text-xs font-bold rounded tracking-wider">−85% tempo ETL</span>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-3 group-hover:text-brand transition-colors">Migração de BI & Governança de Dados</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
+                        Liderança da migração completa do Tableau para Power BI, reestruturando o ecossistema corporativo de BI. Modelagem de dados, criação de camadas analíticas, otimização de ETL com Pentaho e Python e aplicação de práticas de governança — reduzindo o tempo de atualização de 3–4h para menos de 30 min, mantendo 100+ dashboards ativos para 80–100 usuários.
                     </p>
-                    <div class="flex flex-wrap gap-2 mt-auto">
-                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Power BI</span>
-                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Governança</span>
-                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Estratégia</span>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Power BI</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Pentaho</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Python</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Governança</span>
                     </div>
                 </div>
 
-                <div class="bg-light-bg dark:bg-dark-bg p-8 md:p-10 rounded-2xl border border-light-border dark:border-dark-border shadow-sm hover:-translate-y-2 hover:shadow-xl hover:border-brand dark:hover:border-brand-dark transition-all flex flex-col h-full group">
-                    <h3 class="text-2xl font-bold mb-4 group-hover:text-brand dark:group-hover:text-brand-dark transition-colors">Sistema de Sugestão de Pedidos</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 flex-grow leading-relaxed">
-                        Cruzamento complexo de dados (stock vs. vendas vs. ciclo produtivo). Transformou a reposição da loja de semanal para diária, gerando um ganho de produtividade de +5h por semana na ponta.
+                <!-- Card 2 -->
+                <div class="proj-card reveal reveal-delay-1 bg-ink-700 border border-white/8 rounded-2xl p-8 flex flex-col">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="font-mono text-xs text-brand/60 tracking-widest">02</span>
+                        <span class="px-2 py-1 bg-blue-500/15 border border-blue-500/30 text-blue-400 text-xs font-bold rounded tracking-wider">−600h/mês</span>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-3">BI Comercial & Controladoria</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
+                        Solução analítica integrada com indicadores de carteira de pedidos, faturamento, esforço de vendas, devoluções e custos por nota fiscal. Implementação de Row-Level Security (RLS) por e-mail e controle de acesso por perfil. Eliminou extrações manuais do ERP Antara, gerando economia superior a 600 horas/mês para cerca de 30 usuários.
                     </p>
-                    <div class="flex flex-wrap gap-2 mt-auto">
-                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">DAX Avançado</span>
-                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Logística/Comercial</span>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">DAX Avançado</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">SQL Server</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">RLS</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">ERP Antara</span>
                     </div>
                 </div>
 
-                <div class="bg-light-bg dark:bg-dark-bg p-8 md:p-10 rounded-2xl border border-light-border dark:border-dark-border shadow-sm hover:-translate-y-2 hover:shadow-xl hover:border-brand dark:hover:border-brand-dark transition-all flex flex-col h-full group">
-                    <h3 class="text-2xl font-bold mb-4 group-hover:text-brand dark:group-hover:text-brand-dark transition-colors">BI de Faturamento & Controladoria</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 flex-grow leading-relaxed">
-                        Solução detalhando dados ao nível de fatura. Implementação de <strong class="text-gray-900 dark:text-white">Row-Level Security (RLS) por e-mail</strong> e <strong class="text-gray-900 dark:text-white">controlo de acesso por página</strong>. Reduziu em +1h/dia o trabalho de análise manual para dezenas de utilizadores.
+                <!-- Card 3 -->
+                <div class="proj-card reveal reveal-delay-2 bg-ink-700 border border-white/8 rounded-2xl p-8 flex flex-col">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="font-mono text-xs text-brand/60 tracking-widest">03</span>
+                        <span class="px-2 py-1 bg-purple-500/15 border border-purple-500/30 text-purple-400 text-xs font-bold rounded tracking-wider">−20h/mês</span>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-3">Sugestão de Pedidos & Previsão de Demanda</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
+                        Modelo analítico de apoio à decisão para sugestão automática de pedidos cruzando estoque, média de vendas, carteira de pedidos e tempo de produção. Transformou processo manual semanal em fluxo diário de acompanhamento, reduzindo riscos de ruptura de estoque e excesso de produtos.
                     </p>
-                    <div class="flex flex-wrap gap-2 mt-auto">
-                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">SQL Server</span>
-                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Segurança RLS</span>
-                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Acesso Perfil</span>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Power BI</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">DAX</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Logística</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Comercial</span>
                     </div>
                 </div>
 
-                <div class="bg-light-bg dark:bg-dark-bg p-8 md:p-10 rounded-2xl border border-light-border dark:border-dark-border shadow-sm hover:-translate-y-2 hover:shadow-xl hover:border-brand dark:hover:border-brand-dark transition-all flex flex-col h-full group">
-                    <h3 class="text-2xl font-bold mb-4 group-hover:text-brand dark:group-hover:text-brand-dark transition-colors">Automação de Arquitetura ETL</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 flex-grow leading-relaxed">
-                        Desenvolvimento de rotinas agendadas integrando SharePoint, Oracle e APIs web usando Python e Pentaho, garantindo alta disponibilidade dos modelos semânticos.
+                <!-- Card 4 -->
+                <div class="proj-card reveal reveal-delay-3 bg-ink-700 border border-white/8 rounded-2xl p-8 flex flex-col">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="font-mono text-xs text-brand/60 tracking-widest">04</span>
+                        <span class="px-2 py-1 bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-xs font-bold rounded tracking-wider">DRE Diário</span>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-3">BI Financeiro — DRE Automatizado</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
+                        Automação do demonstrativo de resultados no Power BI, integrando dados diretamente do ERP. Reduziu o tempo de geração do relatório de 1x por semana para atualização diária, acelerando a análise financeira e estratégica da diretoria.
                     </p>
-                    <div class="flex flex-wrap gap-2 mt-auto">
-                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Python</span>
-                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Pentaho (PDI)</span>
-                        <span class="bg-brand/10 dark:bg-brand-dark/10 text-brand dark:text-brand-dark px-3 py-1 rounded-md text-xs font-bold uppercase">Integração API</span>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Power BI</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Python</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Financeiro</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Controladoria</span>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="proj-card reveal bg-ink-700 border border-white/8 rounded-2xl p-8 flex flex-col">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="font-mono text-xs text-brand/60 tracking-widest">05</span>
+                        <span class="px-2 py-1 bg-orange-500/15 border border-orange-500/30 text-orange-400 text-xs font-bold rounded tracking-wider">+6% rendimento</span>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-3">BI de Produção & Eficiência Operacional</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
+                        Dashboards para monitoramento de indicadores produtivos, eficiência, perdas e gargalos por máquina. Ampliou a visibilidade operacional e contribuiu para ganhos de até 6% no rendimento produtivo.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Power BI</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">SQL</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Produção</span>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="proj-card reveal reveal-delay-1 bg-ink-700 border border-white/8 rounded-2xl p-8 flex flex-col">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="font-mono text-xs text-brand/60 tracking-widest">06</span>
+                        <span class="px-2 py-1 bg-teal-500/15 border border-teal-500/30 text-teal-400 text-xs font-bold rounded tracking-wider">Monitoramento</span>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-3">Automação de Datasets Power BI (n8n)</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
+                        Automação em n8n para acompanhamento diário das atualizações dos datasets Power BI, centralizando controle de falhas, atrasos e status de refresh. Alertas automáticos identificam datasets com erro reduzindo o risco de decisões baseadas em dados desatualizados.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">n8n</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Power BI API</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Automação</span>
+                        <span class="px-3 py-1 bg-brand/10 border border-brand/20 text-brand/80 text-xs font-semibold rounded">Governança</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack" class="py-28 bg-ink-900 grid-bg">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="reveal mb-16">
+                <p class="sec-num mb-3">// 05 — Tecnologias</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Stack Técnico</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <!-- BI & Visualização -->
+                <div class="reveal bg-ink-800 border border-white/8 rounded-xl p-6">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-8 h-8 bg-brand/20 rounded flex items-center justify-center">
+                            <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                        </div>
+                        <h3 class="font-semibold text-white text-sm uppercase tracking-wider">BI & Visualização</h3>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="skill-pill flex items-center justify-between px-3 py-2 rounded border border-white/6 bg-white/3 text-sm text-gray-300">Power BI <span class="text-brand text-xs">★★★★★</span></div>
+                        <div class="skill-pill flex items-center justify-between px-3 py-2 rounded border border-white/6 bg-white/3 text-sm text-gray-300">DAX Avançado <span class="text-brand text-xs">★★★★★</span></div>
+                        <div class="skill-pill flex items-center justify-between px-3 py-2 rounded border border-white/6 bg-white/3 text-sm text-gray-300">Power Query <span class="text-brand text-xs">★★★★★</span></div>
+                    </div>
+                </div>
+
+                <!-- Dados & ETL -->
+                <div class="reveal reveal-delay-1 bg-ink-800 border border-white/8 rounded-xl p-6">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-8 h-8 bg-brand/20 rounded flex items-center justify-center">
+                            <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+                        </div>
+                        <h3 class="font-semibold text-white text-sm uppercase tracking-wider">Dados & ETL</h3>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="skill-pill flex items-center justify-between px-3 py-2 rounded border border-white/6 bg-white/3 text-sm text-gray-300">SQL (Server/Oracle) <span class="text-brand text-xs">★★★★★</span></div>
+                        <div class="skill-pill flex items-center justify-between px-3 py-2 rounded border border-white/6 bg-white/3 text-sm text-gray-300">Python (ETL) <span class="text-brand text-xs">★★★★☆</span></div>
+                        <div class="skill-pill flex items-center justify-between px-3 py-2 rounded border border-white/6 bg-white/3 text-sm text-gray-300">Pentaho PDI <span class="text-brand text-xs">★★★★☆</span></div>
+                        <div class="skill-pill flex items-center justify-between px-3 py-2 rounded border border-white/6 bg-white/3 text-sm text-gray-300">Azure Data Factory <span class="text-brand text-xs">★★★☆☆</span></div>
+                    </div>
+                </div>
+
+                <!-- Integração & Governança -->
+                <div class="reveal reveal-delay-2 bg-ink-800 border border-white/8 rounded-xl p-6">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-8 h-8 bg-brand/20 rounded flex items-center justify-center">
+                            <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        </div>
+                        <h3 class="font-semibold text-white text-sm uppercase tracking-wider">Integração & Governança</h3>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="skill-pill flex items-center justify-between px-3 py-2 rounded border border-white/6 bg-white/3 text-sm text-gray-300">Modelagem de Dados <span class="text-brand text-xs">★★★★★</span></div>
+                        <div class="skill-pill flex items-center justify-between px-3 py-2 rounded border border-white/6 bg-white/3 text-sm text-gray-300">Integração de APIs <span class="text-brand text-xs">★★★★☆</span></div>
+                        <div class="skill-pill flex items-center justify-between px-3 py-2 rounded border border-white/6 bg-white/3 text-sm text-gray-300">n8n (Automação) <span class="text-brand text-xs">★★★★☆</span></div>
+                        <div class="skill-pill flex items-center justify-between px-3 py-2 rounded border border-white/6 bg-white/3 text-sm text-gray-300">SharePoint <span class="text-brand text-xs">★★★★☆</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Setores -->
+            <div class="reveal">
+                <h3 class="font-serif text-2xl mb-6 text-gray-300">Setores de Atuação</h3>
+                <div class="flex flex-wrap gap-3">
+                    <span class="skill-pill px-5 py-2.5 rounded-full border border-white/10 bg-ink-800 text-gray-300 text-sm font-medium">Comercial & Vendas</span>
+                    <span class="skill-pill px-5 py-2.5 rounded-full border border-white/10 bg-ink-800 text-gray-300 text-sm font-medium">Controladoria / Finanças</span>
+                    <span class="skill-pill px-5 py-2.5 rounded-full border border-white/10 bg-ink-800 text-gray-300 text-sm font-medium">Produção Industrial</span>
+                    <span class="skill-pill px-5 py-2.5 rounded-full border border-white/10 bg-ink-800 text-gray-300 text-sm font-medium">Logística / PPCP</span>
+                    <span class="skill-pill px-5 py-2.5 rounded-full border border-white/10 bg-ink-800 text-gray-300 text-sm font-medium">Diretoria Executiva</span>
+                    <span class="skill-pill px-5 py-2.5 rounded-full border border-white/10 bg-ink-800 text-gray-300 text-sm font-medium">Qualidade & RH</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORMAÇÃO -->
+    <section id="formacao" class="py-28 bg-ink-800">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="reveal mb-16">
+                <p class="sec-num mb-3">// 06 — Educação</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Formação & Cursos</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-10">
+                <div class="reveal">
+                    <h3 class="font-mono text-xs text-brand/70 tracking-widest uppercase mb-6">Formação Acadêmica</h3>
+                    <div class="space-y-4">
+                        <div class="bg-ink-700 border border-white/8 rounded-xl p-6 hover:border-brand/30 transition-colors">
+                            <div class="font-mono text-xs text-brand/60 mb-2">2026 — 2028</div>
+                            <h4 class="font-serif text-xl mb-1">Inteligência de Mercado e Análise de Dados</h4>
+                            <p class="text-gray-500 text-sm">Anhanguera · Em curso</p>
+                        </div>
+                        <div class="bg-ink-700 border border-white/8 rounded-xl p-6 hover:border-brand/30 transition-colors">
+                            <div class="font-mono text-xs text-brand/60 mb-2">Fev/2021 — Dez/2023</div>
+                            <h4 class="font-serif text-xl mb-1">Técnico em Informática</h4>
+                            <p class="text-gray-500 text-sm">Instituto de Educação Ivoti · Concluído</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal reveal-delay-2">
+                    <h3 class="font-mono text-xs text-brand/70 tracking-widest uppercase mb-6">Certificações Técnicas</h3>
+                    <div class="space-y-4">
+                        <div class="bg-ink-700 border border-white/8 rounded-xl p-6 hover:border-brand/30 transition-colors">
+                            <div class="font-mono text-xs text-brand/60 mb-2">114 horas</div>
+                            <h4 class="font-semibold text-white mb-1">Desenvolvimento Web Completo</h4>
+                            <p class="text-gray-500 text-sm">Udemy</p>
+                        </div>
+                        <div class="bg-ink-700 border border-white/8 rounded-xl p-6 hover:border-brand/30 transition-colors">
+                            <div class="font-mono text-xs text-brand/60 mb-2">17 horas</div>
+                            <h4 class="font-semibold text-white mb-1">SQL do Básico ao Avançado</h4>
+                            <p class="text-gray-500 text-sm">Udemy</p>
+                        </div>
+                        <div class="bg-ink-700 border border-white/8 rounded-xl p-6 hover:border-brand/30 transition-colors">
+                            <div class="font-mono text-xs text-brand/60 mb-2">10 horas</div>
+                            <h4 class="font-semibold text-white mb-1">Missão Zero Bootcamp — Data Analytics</h4>
+                            <p class="text-gray-500 text-sm">Xperiun</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="competencias" class="py-24 scroll-mt-20 fade-in-section">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <h2 class="text-3xl md:text-4xl font-bold mb-2">Conjunto de Tecnologias</h2>
-            <div class="w-16 h-1 bg-brand dark:bg-brand-dark rounded mt-4 mb-12"></div>
+    <!-- CONTATO -->
+    <section id="contato" class="py-32 bg-ink-900 grid-bg relative overflow-hidden">
+        <div class="orb w-[500px] h-[500px] bg-brand/8 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <div class="reveal">
+                <p class="sec-num mb-3">// 07 — Contato</p>
+                <h2 class="font-serif text-5xl md:text-6xl mb-6">Vamos conversar?</h2>
+                <p class="text-gray-400 text-lg leading-relaxed max-w-2xl mx-auto mb-12">
+                    Disponível para oportunidades em modelo <strong class="text-white">Remoto ou Híbrido</strong> (Ivoti/RS). Se a sua empresa quer transformar dados dispersos em vantagens competitivas, entre em contato.
+                </p>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-20">
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">📊 Power BI & DAX</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">🗄️ SQL (Procedures/Views)</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">🐍 Python (Automação/ETL)</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">⚙️ Pentaho (PDI)</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">☁️ Azure Data Factory</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">🗃️ Oracle & SQL Server</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">🌐 Integrações via API</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">📈 Modelagem de Dados</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">📑 Power Query</div>
-            </div>
-
-            <h3 class="text-2xl font-bold mb-8 border-l-4 border-brand dark:border-brand-dark pl-4">Soft Skills</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-20">
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">🧠 Pensamento Analítico</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">🤝 Comunicação com Negócio</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">💡 Resolução de Problemas</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">🎯 Visão Estratégica</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">⏱️ Organização e Prioridade</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">👥 Trabalho em Equipa</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">📈 Mentalidade Data-Driven</div>
-                <div class="flex justify-center items-center w-full px-6 py-4 rounded-full border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-sm hover:-translate-y-1 hover:border-brand dark:hover:border-brand-dark transition-all text-sm md:text-base font-semibold text-center">📚 Aprendizagem Contínua</div>
-            </div>
-
-            <h3 class="text-2xl font-bold mb-8 border-l-4 border-brand dark:border-brand-dark pl-4">Setores de Atuação</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <div class="flex justify-center items-center w-full px-8 py-5 rounded-xl font-bold text-gray-600 dark:text-gray-400 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:text-gray-900 dark:hover:text-white hover:border-brand dark:hover:border-brand-dark hover:-translate-y-1 transition-all text-center">Diretoria Executiva</div>
-                <div class="flex justify-center items-center w-full px-8 py-5 rounded-xl font-bold text-gray-600 dark:text-gray-400 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:text-gray-900 dark:hover:text-white hover:border-brand dark:hover:border-brand-dark hover:-translate-y-1 transition-all text-center">Comercial & Vendas</div>
-                <div class="flex justify-center items-center w-full px-8 py-5 rounded-xl font-bold text-gray-600 dark:text-gray-400 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:text-gray-900 dark:hover:text-white hover:border-brand dark:hover:border-brand-dark hover:-translate-y-1 transition-all text-center">Controladoria / Finanças</div>
-                <div class="flex justify-center items-center w-full px-8 py-5 rounded-xl font-bold text-gray-600 dark:text-gray-400 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:text-gray-900 dark:hover:text-white hover:border-brand dark:hover:border-brand-dark hover:-translate-y-1 transition-all text-center">Logística / PPCP</div>
-                <div class="flex justify-center items-center w-full px-8 py-5 rounded-xl font-bold text-gray-600 dark:text-gray-400 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:text-gray-900 dark:hover:text-white hover:border-brand dark:hover:border-brand-dark hover:-translate-y-1 transition-all text-center">Produção Industrial</div>
-                <div class="flex justify-center items-center w-full px-8 py-5 rounded-xl font-bold text-gray-600 dark:text-gray-400 border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface hover:text-gray-900 dark:hover:text-white hover:border-brand dark:hover:border-brand-dark hover:-translate-y-1 transition-all text-center">Qualidade & RH</div>
-            </div>
-        </div>
-    </section>
-
-    <section id="formacao" class="py-24 scroll-mt-20 bg-light-alt dark:bg-dark-alt border-y border-light-border dark:border-dark-border fade-in-section">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <h2 class="text-3xl md:text-4xl font-bold mb-2">Formação & Cursos</h2>
-            <div class="w-16 h-1 bg-brand dark:bg-brand-dark rounded mt-4 mb-16"></div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div>
-                    <h3 class="text-2xl font-bold mb-8 border-l-4 border-brand dark:border-brand-dark pl-4">Formação Académica</h3>
-                    <div class="space-y-6">
-                        <div class="bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border p-6 rounded-xl shadow-sm hover:border-brand dark:hover:border-brand-dark hover:translate-x-2 transition-all">
-                            <h4 class="text-xl font-bold mb-1">Inteligência de Mercado e Análise de Dados</h4>
-                            <p class="text-gray-600 dark:text-gray-400 font-semibold">Anhanguera</p>
-                            <p class="text-brand dark:text-brand-dark font-bold text-sm mt-2">2026 – 2028</p>
-                        </div>
-                        <div class="bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border p-6 rounded-xl shadow-sm hover:border-brand dark:hover:border-brand-dark hover:translate-x-2 transition-all">
-                            <h4 class="text-xl font-bold mb-1">Técnico em Informática</h4>
-                            <p class="text-gray-600 dark:text-gray-400 font-semibold">Instituto de Educação Ivoti</p>
-                            <p class="text-brand dark:text-brand-dark font-bold text-sm mt-2">Fev/2021 – Dez/2023</p>
-                        </div>
-                    </div>
+                <div class="flex flex-wrap justify-center gap-4 mb-12">
+                    <a href="https://wa.me/5551991868412?text=Ol%C3%A1%20Jean,%20vi%20o%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar!" target="_blank" class="inline-flex items-center gap-3 px-8 py-4 bg-brand text-ink-900 font-bold rounded text-sm uppercase tracking-wider hover:bg-brand/90 transition-all hover:-translate-y-1">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                        WhatsApp
+                    </a>
+                    <a href="https://www.linkedin.com/in/jean-f-mattos" target="_blank" class="inline-flex items-center gap-3 px-8 py-4 border border-white/15 font-bold rounded text-sm uppercase tracking-wider hover:border-brand/50 hover:text-brand transition-all hover:-translate-y-1">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        LinkedIn
+                    </a>
+                    <a href="mailto:jean.f.mattos@gmail.com" class="inline-flex items-center gap-3 px-8 py-4 border border-white/15 font-bold rounded text-sm uppercase tracking-wider hover:border-brand/50 hover:text-brand transition-all hover:-translate-y-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        E-mail
+                    </a>
                 </div>
 
-                <div>
-                    <h3 class="text-2xl font-bold mb-8 border-l-4 border-brand dark:border-brand-dark pl-4">Certificações Técnicas</h3>
-                    <div class="space-y-6">
-                        <div class="bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border p-6 rounded-xl shadow-sm hover:border-brand dark:hover:border-brand-dark hover:translate-x-2 transition-all">
-                            <h4 class="text-xl font-bold mb-1">Desenvolvimento Web Completo</h4>
-                            <p class="text-gray-600 dark:text-gray-400 font-semibold">Udemy</p>
-                            <p class="text-brand dark:text-brand-dark font-bold text-sm mt-2">114 horas</p>
-                        </div>
-                        <div class="bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border p-6 rounded-xl shadow-sm hover:border-brand dark:hover:border-brand-dark hover:translate-x-2 transition-all">
-                            <h4 class="text-xl font-bold mb-1">SQL do Básico ao Avançado</h4>
-                            <p class="text-gray-600 dark:text-gray-400 font-semibold">Udemy</p>
-                            <p class="text-brand dark:text-brand-dark font-bold text-sm mt-2">17 horas</p>
-                        </div>
-                        <div class="bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border p-6 rounded-xl shadow-sm hover:border-brand dark:hover:border-brand-dark hover:translate-x-2 transition-all">
-                            <h4 class="text-xl font-bold mb-1">Missão Zero Bootcamp (Data Analytics)</h4>
-                            <p class="text-gray-600 dark:text-gray-400 font-semibold">Xperiun</p>
-                            <p class="text-brand dark:text-brand-dark font-bold text-sm mt-2">10 horas</p>
-                        </div>
-                    </div>
+                <div class="flex justify-center gap-6 text-sm text-gray-600 font-mono">
+                    <span>(51) 9 9186-8412</span>
+                    <span>·</span>
+                    <span>jean.f.mattos@gmail.com</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="contato" class="py-32 scroll-mt-20 fade-in-section text-center">
-        <div class="max-w-5xl mx-auto px-6 lg:px-8">
-            <h2 class="text-4xl md:text-5xl font-bold mb-2">Vamos conversar?</h2>
-            <div class="w-16 h-1 bg-brand dark:bg-brand-dark rounded mt-4 mb-12 mx-auto"></div>
-            
-            <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-10 leading-relaxed max-w-3xl mx-auto">
-                Disponível para oportunidades em modelo Remoto ou Híbrido (Ivoti/RS). Se a sua empresa procura transformar informações dispersas em vantagens competitivas estruturadas, envie uma mensagem e vamos marcar um bate-papo.
-            </p>
-            
-            <div class="text-xl font-semibold text-gray-800 dark:text-gray-300 mb-12 space-y-2">
-                <p>📱 (51) 9 9186-8412</p>
-                <p>📧 jean.f.mattos@gmail.com</p>
-            </div>
-            
-            <div class="flex flex-wrap justify-center items-center gap-4 md:gap-6">
-                
-                <a href="https://wa.me/5551991868412?text=Ol%C3%A1%20Jean,%20vi%20o%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar!" target="_blank" rel="noopener noreferrer" class="inline-flex justify-center items-center gap-3 px-8 py-4 rounded-md font-bold text-lg text-white bg-brand dark:bg-brand-dark hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(242,200,17,0.3)] transition-all w-full sm:w-auto">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
-                    </svg>
-                    WhatsApp
-                </a>
-
-                <a href="https://www.linkedin.com/in/jean-f-mattos" target="_blank" rel="noopener noreferrer" class="inline-flex justify-center items-center gap-3 px-8 py-4 rounded-md font-bold text-lg border-2 border-gray-300 dark:border-dark-border hover:border-brand dark:hover:border-brand-dark hover:text-brand dark:hover:text-brand-dark transition-all w-full sm:w-auto">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                    </svg>
-                    Acessar LinkedIn
-                </a>
-
-                <a href="Jean%20Mattos%20%E2%80%94%20Analista%20de%20Dados%20(BI).pdf" download="Jean_Mattos_Analista_de_Dados_BI.pdf" class="inline-flex justify-center items-center gap-3 px-8 py-4 rounded-md font-bold text-lg border-2 border-brand dark:border-brand-dark text-brand dark:text-brand-dark hover:bg-brand hover:text-white dark:hover:bg-brand-dark dark:hover:text-gray-900 transition-all w-full sm:w-auto">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                    </svg>
-                    Baixar Currículo
-                </a>
-
-            </div>
-        </div>
-    </section>
+    <!-- FOOTER -->
+    <footer class="bg-ink-900 border-t border-white/5 py-6 text-center">
+        <p class="font-mono text-xs text-gray-700">Jean Mattos · Analista de Dados & BI · Ivoti/RS</p>
+    </footer>
 
     <script>
-        // LÓGICA DO TEMA CLARO/ESCURO (Tailwind Class Mode)
-        const themeToggleBtn = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        const htmlElement = document.documentElement;
-
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
-            htmlElement.classList.remove('dark');
-            themeIcon.textContent = '🌙';
-        } else {
-            htmlElement.classList.add('dark');
-            themeIcon.textContent = '☀️';
-        }
-
-        themeToggleBtn.addEventListener('click', () => {
-            if (htmlElement.classList.contains('dark')) {
-                htmlElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                themeIcon.textContent = '🌙';
-            } else {
-                htmlElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                themeIcon.textContent = '☀️';
-            }
+        // Mobile menu
+        document.getElementById('menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('open');
+        });
+        document.querySelectorAll('.mobile-nav').forEach(link => {
+            link.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('open'));
         });
 
-        // LÓGICA DO MENU MOBILE
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
-
-        function toggleMenu() {
-            if (mobileMenu.style.maxHeight && mobileMenu.style.maxHeight !== '0px') {
-                mobileMenu.style.maxHeight = '0px';
-                mobileMenu.classList.remove('border-b', 'border-light-border', 'dark:border-dark-border');
-            } else {
-                mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
-                mobileMenu.classList.add('border-b', 'border-light-border', 'dark:border-dark-border');
-            }
-        }
-
-        mobileMenuBtn.addEventListener('click', toggleMenu);
-        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
-
-        // ANIMAÇÕES DE SCROLL E KPIs
-        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
-        const observer = new IntersectionObserver((entries, observer) => {
+        // Scroll reveal
+        const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    if(entry.target.id === 'sobre') {
-                        startCounters();
-                    }
-                }
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
-        }, observerOptions);
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-        document.querySelectorAll('.fade-in-section').forEach(el => observer.observe(el));
-
-        let countersStarted = false;
-        function startCounters() {
-            if (countersStarted) return;
-            countersStarted = true;
-            
-            const counters = document.querySelectorAll('.kpi-number');
-            counters.forEach(counter => {
-                const target = +counter.getAttribute('data-target');
-                const duration = 2000; 
-                const increment = target / (duration / 16); 
-                
+        // KPI counters
+        const kpiObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                const target = +el.dataset.count;
+                const suffix = el.dataset.suffix || '';
+                const duration = 1800;
+                const step = target / (duration / 16);
                 let current = 0;
-                const updateCounter = () => {
-                    current += increment;
-                    if (current < target) {
-                        counter.innerText = Math.ceil(current) + (target === 85 || target === 6 ? '%' : target === 100 ? '+' : '');
-                        requestAnimationFrame(updateCounter);
-                    } else {
-                        counter.innerText = target + (target === 85 || target === 6 ? '%' : target === 100 ? '+' : '');
-                    }
-                };
-                updateCounter();
+                const timer = setInterval(() => {
+                    current = Math.min(current + step, target);
+                    el.textContent = Math.ceil(current) + suffix;
+                    if (current >= target) clearInterval(timer);
+                }, 16);
+                kpiObserver.unobserve(el);
             });
-        }
+        }, { threshold: 0.5 });
+        document.querySelectorAll('[data-count]').forEach(el => kpiObserver.observe(el));
+
+        // Smooth scroll nav active state
+        const sections = document.querySelectorAll('section[id]');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(sec => {
+                if (window.scrollY >= sec.offsetTop - 100) current = sec.id;
+            });
+        });
     </script>
 </body>
 </html>
