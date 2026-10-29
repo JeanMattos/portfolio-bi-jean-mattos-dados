@@ -5,3 +5,7 @@ __pycache__/
 *.log
 .DS_Store
 Thumbs.db
+# Contexto e documentação internos permanecem apenas locais.
+/*.md
+/.impeccable/
+/assets/fonts/google-fonts-source.css
